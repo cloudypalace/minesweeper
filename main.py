@@ -2,6 +2,7 @@ from cell import Cell
 from board import Board
 import os
 import tkinter as tk
+from tkinter import messagebox
 
 
 rows =9
@@ -13,9 +14,13 @@ board = Board(rows=rows,cols=cols,mines=mines)
 
 def reveal(i, j):
     result = board.reveal(i, j)
-    win = refresh_ui()
+    refresh_ui()
     if not result:
         tk.messagebox.showinfo("游戏结束", "你输了！")
+        
+    win = board.check_win()
+    if win:
+        tk.messagebox.showinfo("游戏结束", "你赢了！")
 
 
 
@@ -43,6 +48,15 @@ def refresh_ui():
 
 root = tk.Tk()
 root.title("扫雷")
+
+# menubar = tk.Menu(root)
+
+# settings_menu = tk.Menu(menubar, tearoff=0)
+# settings_menu.add_command(label="偏好设置…", command=lambda: print("打开设置"))
+# settings_menu.add_separator()
+# settings_menu.add_command(label="退出", command=root.quit)
+# menubar.add_cascade(label="设置", menu=settings_menu)
+
 buttons = [[None]*cols for _ in range(rows)]
 for i in range(rows):
     for j in range(cols):
@@ -50,5 +64,7 @@ for i in range(rows):
         btn.grid(row=i, column=j)
         btn.bind("<Button-3>", lambda event, i=i, j=j: flag(i, j, event))
         buttons[i][j] = btn
+
+# root.config(menu=menubar)
 
 root.mainloop()
